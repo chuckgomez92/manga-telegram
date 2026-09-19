@@ -1,21 +1,21 @@
-name: Telegram Test
+name: MANGA Plus Checker
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Python
+      - name: Install Python dependencies
         run: pip install requests
 
-      - name: Send Telegram message
+      - name: Check MANGA Plus
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
-        run: python test_telegram.py
+        run: python checker.py
