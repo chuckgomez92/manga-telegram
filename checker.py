@@ -1,5 +1,6 @@
 import os
 import re
+import requests
 from playwright.sync_api import sync_playwright
 
 MANGA_URL = "https://mangaplus.shueisha.co.jp/titles/200116"
@@ -30,11 +31,6 @@ def get_latest_chapter():
 
         browser.close()
 
-    # Buscar capítulos con formato:
-    # #037
-    # ...
-    # Capítulo 37: Confía en él
-
     pattern = r"#(\d+).*?Capítulo\s+(\d+)(?::\s*(.*?))?(?=\n|$)"
 
     matches = re.findall(
@@ -48,7 +44,6 @@ def get_latest_chapter():
             "No se encontraron capítulos en MANGA Plus."
         )
 
-    # El último capítulo de la página es el más reciente
     chapter_id, chapter_number, chapter_title = matches[-1]
 
     chapter_number = int(chapter_number)
@@ -86,8 +81,6 @@ def send_telegram(chapter_number, chapter_title):
             "👉 [Leer oficialmente en MANGA Plus]"
             f"({MANGA_URL})"
         )
-
-    import requests
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -130,26 +123,22 @@ def main():
     print("Capítulo guardado:", previous_chapter)
 
     # Primera ejecución
-   if not previous_chapter:
+    if not previous_chapter:
 
-    print("Primera ejecución.")
+        with open(
+            STATE_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
 
-    send_telegram(
-        current_chapter,
-        chapter_title
-    )
+            file.write(current_chapter)
 
-    with open(
-        STATE_FILE,
-        "w",
-        encoding="utf-8"
-    ) as file:
+        print(
+            "Primera ejecución: "
+            "capítulo guardado sin enviar Telegram."
+        )
 
-        file.write(current_chapter)
-
-    print("Capítulo inicial enviado a Telegram.")
-
-    return
+        return
 
     # Capítulo nuevo
     if current_chapter != previous_chapter:
