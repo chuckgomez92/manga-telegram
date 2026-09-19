@@ -1,10 +1,11 @@
-name: MANGA Plus Test
+name: MANGA Plus Checker
 
 on:
   workflow_dispatch:
 
 jobs:
   check:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -19,9 +20,12 @@ jobs:
 
       - name: Install Playwright
         run: |
-          pip install playwright
+          pip install playwright requests
           playwright install chromium
           playwright install-deps chromium
 
       - name: Check MANGA Plus
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
         run: python checker.py
