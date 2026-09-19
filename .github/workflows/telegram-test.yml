@@ -1,4 +1,4 @@
-name: MANGA Plus Checker
+name: MANGA Plus Test
 
 on:
   workflow_dispatch:
@@ -15,7 +15,4 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Check MANGA Plus
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
         run: python checker.py
