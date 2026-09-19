@@ -130,22 +130,26 @@ def main():
     print("Capítulo guardado:", previous_chapter)
 
     # Primera ejecución
-    if not previous_chapter:
+   if not previous_chapter:
 
-        with open(
-            STATE_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
+    print("Primera ejecución.")
 
-            file.write(current_chapter)
+    send_telegram(
+        current_chapter,
+        chapter_title
+    )
 
-        print(
-            "Primera ejecución: "
-            "capítulo guardado sin enviar Telegram."
-        )
+    with open(
+        STATE_FILE,
+        "w",
+        encoding="utf-8"
+    ) as file:
 
-        return
+        file.write(current_chapter)
+
+    print("Capítulo inicial enviado a Telegram.")
+
+    return
 
     # Capítulo nuevo
     if current_chapter != previous_chapter:
